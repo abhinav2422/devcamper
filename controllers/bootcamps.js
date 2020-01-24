@@ -1,3 +1,5 @@
+const Bootcamp = require('../models/Bootcamps');
+
 // GET api/v1/bootcamps
 exports.getBootcamps = (req, res, next) => {
   res.status(200).json({ success: true, msg: 'Show' });
@@ -9,8 +11,17 @@ exports.getBootcamp = (req, res, next) => {
 };
 
 // POST api/v1/bootcamp
-exports.createtBootcamp = (req, res, next) => {
-  res.status(200).json({ success: true, msg: 'Create' });
+exports.createtBootcamp = async (req, res, next) => {
+  try {
+    const bootcamp = await Bootcamp.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: bootcamp
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
 };
 
 // PUT api/v1/bootcamps/:id
