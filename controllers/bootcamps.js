@@ -5,7 +5,28 @@ const Bootcamp = require('../models/Bootcamps');
 
 // GET ALL api/v1/bootcamps
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  const bootcamps = await Bootcamp.find();
+  let { select, sort, ...reqQuery } = { ...req.query };
+
+  // Create operators such as lte, gt, etc
+  let queryStr = JSON.stringify(reqQuery);
+  queryStr = queryStr.replace(/\b(lt|lte|gt|gte|in)\b/g, match => `$${match}`);
+
+  // Select out certain fields
+  if (select) {
+    var fields = select.replace(/,/g, ' ');
+    // query.select(fields);
+  }
+
+  if (sort) {
+    sort = sort.replace(/,/g, ' ');
+  } else {
+    sort = '-createdAt';
+  }
+
+  // let query = Bootcamp.find(JSON.parse(queryStr), fields, { sort });
+  // query.sort(sort);
+
+  const bootcamps = await Bootcamp.find(JSON.parse(queryStr), fields, { sort });
 
   res.status(200).json({
     success: true,
