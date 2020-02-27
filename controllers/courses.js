@@ -67,7 +67,7 @@ exports.createCourse = asyncHandler(async (req, res, next) => {
   });
 });
 
-// PUT a course api/v1/courses/:id
+// PUT a course api/v1/courses/:id [Private access]
 exports.updateCourse = asyncHandler(async (req, res, next) => {
   const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -86,7 +86,7 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
   });
 });
 
-// DELETE a course api/v1/courses/:id
+// DELETE a course api/v1/courses/:id [Private access]
 exports.deleteCourse = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(req.params.id);
 
