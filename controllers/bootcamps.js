@@ -6,65 +6,7 @@ const Bootcamp = require('../models/Bootcamp');
 
 // GET ALL api/v1/bootcamps
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  let { select, sort, page, limit, ...reqQuery } = { ...req.query };
-
-  // Create operators such as lte, gt, etc
-  let queryStr = JSON.stringify(reqQuery);
-  queryStr = queryStr.replace(/\b(lt|lte|gt|gte|in)\b/g, match => `$${match}`);
-
-  // Select out certain fields
-  if (select) {
-    var fields = select.replace(/,/g, ' ');
-    // query.select(fields);
-  }
-
-  if (sort) {
-    sort = sort.replace(/,/g, ' ');
-  } else {
-    sort = '-createdAt';
-  }
-
-  page = parseInt(page) || 1;
-  limit = parseInt(limit) || 25;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-  const total = await Bootcamp.countDocuments();
-
-  // let query = Bootcamp.find(JSON.parse(queryStr), fields, { sort });
-  // query.sort(sort);
-
-  const bootcamps = await Bootcamp.find(JSON.parse(queryStr))
-    .select(fields)
-    .sort(sort)
-    .limit(limit)
-    .skip(startIndex)
-    .populate({
-      path: 'courses',
-      select: 'title description'
-    });
-
-  pagination = {};
-
-  if (startIndex > 0) {
-    pagination.prev = {
-      page: page - 1,
-      limit
-    };
-  }
-
-  if (endIndex < total) {
-    pagination.next = {
-      page: page + 1,
-      limit
-    };
-  }
-
-  res.status(200).json({
-    success: true,
-    count: bootcamps.length,
-    pagination,
-    data: bootcamps
-  });
+  res.status(200).json(res.advancedResults);
 });
 
 // GET BY ID api/v1/bootcamps/:id
