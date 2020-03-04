@@ -25,7 +25,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   });
 });
 
-// POST api/v1/bootcamp
+// POST api/v1/bootcamp [Private access]
 exports.createtBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.create(req.body);
 
@@ -35,8 +35,9 @@ exports.createtBootcamp = asyncHandler(async (req, res, next) => {
   });
 });
 
-// PUT api/v1/bootcamps/:id
+// PUT api/v1/bootcamps/:id [Private access]
 exports.updateBootcamp = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
   const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
@@ -54,7 +55,7 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
   });
 });
 
-// DELETE api/v1/bootcamps/:id
+// DELETE api/v1/bootcamps/:id [Private access]
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
@@ -94,7 +95,7 @@ exports.getBootcampsByRadius = asyncHandler(async (req, res, next) => {
   });
 });
 
-// PUT api/v1/bootcamps/:id/photo
+// PUT api/v1/bootcamps/:id/photo [Private access]
 exports.uploadBootcampPhoto = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 

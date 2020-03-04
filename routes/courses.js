@@ -12,6 +12,9 @@ const router = express.Router({ mergeParams: true });
 const advancedResults = require('../middleware/advancedResults');
 const Course = require('../models/Course');
 
+// Require authorization middleware
+const { protect } = require('../middleware/auth');
+
 router
   .route('/')
   .get(
@@ -21,12 +24,12 @@ router
     }),
     getCourses
   )
-  .post(createCourse);
+  .post(protect, createCourse);
 
 router
   .route('/:id')
   .get(getCourse)
-  .put(updateCourse)
-  .delete(deleteCourse);
+  .put(protect, updateCourse)
+  .delete(protect, deleteCourse);
 
 module.exports = router;
