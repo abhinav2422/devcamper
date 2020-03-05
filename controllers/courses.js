@@ -40,6 +40,7 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 // POST a course api/v1/bootcamps/:bootcampId/courses [Private access]
 exports.createCourse = asyncHandler(async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
+  req.body.user = req.user.id;
 
   const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
@@ -48,6 +49,16 @@ exports.createCourse = asyncHandler(async (req, res, next) => {
       new ErrorResponse(
         `Bootcamp not found with id ${req.params.bootcampId}`,
         404
+      )
+    );
+  }
+
+  // Make sure user is bootcamp owner
+  if (req.user.id !== bootcamp.user.toString() && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        'User not authorized to add a course to this bootcamp',
+        401
       )
     );
   }
@@ -62,16 +73,25 @@ exports.createCourse = asyncHandler(async (req, res, next) => {
 
 // PUT a course api/v1/courses/:id [Private access]
 exports.updateCourse = asyncHandler(async (req, res, next) => {
-  const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true
-  });
+  let course = await Course.findById(req.params.id);
 
   if (!course) {
     return next(
       new ErrorResponse(`Course not found with id ${req.params.id}`, 404)
     );
   }
+
+  // Make sure user is bootcamp owner
+  if (req.user.id !== course.user.toString() && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse('User not authorized to update this course', 401)
+    );
+  }
+
+  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
 
   res.status(200).json({
     success: true,
@@ -86,6 +106,13 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
   if (!course) {
     return next(
       new ErrorResponse(`Course not found with id ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure user is bootcamp owner
+  if (req.user.id !== course.user.toString() && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse('User not authorized to delete this course', 401)
     );
   }
 
