@@ -10,6 +10,7 @@ const {
 } = require('../controllers/bootcamps');
 
 const advancedResults = require('../middleware/advancedResults');
+const checkExistenceOwnership = require('../middleware/existenceOwnership');
 const Bootcamp = require('../models/Bootcamp');
 
 // Require authorization middleware
@@ -21,7 +22,7 @@ const courseRouter = require('./courses');
 const router = express.Router();
 
 // Re-route to other resources
-router.use('/:bootcampId/courses', courseRouter);
+router.use('/:id/courses', courseRouter); //id is bootcamp id here
 
 router
   .route('/')
@@ -31,13 +32,28 @@ router
 router
   .route('/:id')
   .get(getBootcamp)
-  .put(protect, authorize('publisher', 'admin'), updateBootcamp)
-  .delete(protect, authorize('publisher', 'admin'), deleteBootcamp);
+  .put(
+    protect,
+    authorize('publisher', 'admin'),
+    checkExistenceOwnership(Bootcamp),
+    updateBootcamp
+  )
+  .delete(
+    protect,
+    authorize('publisher', 'admin'),
+    checkExistenceOwnership(Bootcamp),
+    deleteBootcamp
+  );
 
 router.route('/:zipcode/:distance').get(getBootcampsByRadius);
 
 router
   .route('/:id/photo')
-  .put(protect, authorize('publisher', 'admin'), uploadBootcampPhoto);
+  .put(
+    protect,
+    authorize('publisher', 'admin'),
+    checkExistenceOwnership(Bootcamp),
+    uploadBootcampPhoto
+  );
 
 module.exports = router;
