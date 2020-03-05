@@ -10,11 +10,14 @@ const {
 } = require('../controllers/bootcamps');
 
 const advancedResults = require('../middleware/advancedResults');
-const checkExistenceOwnership = require('../middleware/existenceOwnership');
 const Bootcamp = require('../models/Bootcamp');
 
 // Require authorization middleware
-const { protect, authorize } = require('../middleware/auth');
+const {
+  protect,
+  authorize,
+  checkExistenceOwnership
+} = require('../middleware/auth');
 
 // Include other resources
 const courseRouter = require('./courses');

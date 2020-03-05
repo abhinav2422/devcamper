@@ -10,12 +10,15 @@ const {
 const router = express.Router({ mergeParams: true });
 
 const advancedResults = require('../middleware/advancedResults');
-const checlExistenceOwnership = require('../middleware/existenceOwnership');
 const Bootcamp = require('../models/Bootcamp');
 const Course = require('../models/Course');
 
 // Require authorization middleware
-const { protect, authorize } = require('../middleware/auth');
+const {
+  protect,
+  authorize,
+  checkExistenceOwnership
+} = require('../middleware/auth');
 
 router
   .route('/')
@@ -29,7 +32,7 @@ router
   .post(
     protect,
     authorize('publisher', 'admin'),
-    checlExistenceOwnership(Bootcamp),
+    checkExistenceOwnership(Bootcamp),
     createCourse
   );
 
@@ -39,13 +42,13 @@ router
   .put(
     protect,
     authorize('publisher', 'admin'),
-    checlExistenceOwnership(Course),
+    checkExistenceOwnership(Course),
     updateCourse
   )
   .delete(
     protect,
     authorize('publisher', 'admin'),
-    checlExistenceOwnership(Course),
+    checkExistenceOwnership(Course),
     deleteCourse
   );
 

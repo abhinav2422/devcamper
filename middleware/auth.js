@@ -36,3 +36,20 @@ exports.authorize = (...roles) => (req, res, next) => {
 
   return next();
 };
+
+exports.checkExistenceOwnership = model => async (req, res, next) => {
+  let resource = await model.findById(req.params.id);
+
+  if (!resource) {
+    return next(
+      new errorResponse(`Resource not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure user is resource owner
+  if (req.user.id !== resource.user.toString() && req.user.role !== 'admin') {
+    return next(new errorResponse('User not authorized to do this task', 401));
+  }
+
+  next();
+};

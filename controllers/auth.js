@@ -1,5 +1,7 @@
 const ErrorResponse = require('../utils/errorResponse');
+const sendMail = require('../utils/sendMail');
 const asyncHandler = require('../middleware/asyncHandler');
+const nodemailer = require('nodemailer');
 const User = require('../models/User');
 
 // POST api/v1/auth/register
@@ -39,6 +41,61 @@ exports.login = asyncHandler(async (req, res, next) => {
   sendTokenRes(user, 200, res);
 });
 
+// GET api/v1/auth/me
+exports.getMe = (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    data: req.user
+  });
+};
+
+// POST api/v1/auth/forgotPassword
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new ErrorResponse('User not found', 404));
+  }
+
+  const token = user.getPasswordResetToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  const resetUrl = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/resetPassword/${token}`;
+
+  try {
+    sendMail({
+      email: req.body.email,
+      subject: 'Password Reset Mail',
+      text: resetUrl
+    });
+
+    res.status(200).json({
+      success: true,
+      data: 'Mail sent'
+    });
+  } catch (err) {
+    console.log(err);
+
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save({ validateBeforeSave: false });
+
+    res.status(500).json({
+      success: false,
+      data: 'Mail could not be sent'
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: 'Mail sent'
+  });
+});
+
 // Create and send token and cookie
 const sendTokenRes = (user, statusCode, res) => {
   const token = user.getSignedJwt();
@@ -61,12 +118,4 @@ const sendTokenRes = (user, statusCode, res) => {
       success: true,
       token
     });
-};
-
-// Get logged in user details
-exports.getMe = (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    data: req.user
-  });
 };
