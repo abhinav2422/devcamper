@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const ErrorResponse = require('../utils/errorResponse');
 const sendMail = require('../utils/sendMail');
 const asyncHandler = require('../middleware/asyncHandler');
@@ -63,7 +64,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get(
     'host'
-  )}/api/v1/resetPassword/${token}`;
+  )}/api/v1/auth/resetPassword/${token}`;
 
   try {
     sendMail({
@@ -94,6 +95,30 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     success: true,
     data: 'Mail sent'
   });
+});
+
+// PUT api/v1/auth/resetPassword/:resetToken
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  const resetToken = crypto
+    .createHash('sha256')
+    .update(req.params.resetToken)
+    .digest('hex');
+
+  let user = await User.findOne({
+    resetPasswordToken: resetToken,
+    resetPasswordExpire: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return next(new ErrorResponse('Invalid token'));
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  sendTokenRes(user, 200, res);
 });
 
 // Create and send token and cookie
