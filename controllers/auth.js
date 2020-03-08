@@ -42,13 +42,47 @@ exports.login = asyncHandler(async (req, res, next) => {
   sendTokenRes(user, 200, res);
 });
 
-// GET api/v1/auth/me
+// GET api/v1/auth/me [Private access]
 exports.getMe = (req, res, next) => {
   res.status(200).json({
     success: true,
     data: req.user
   });
 };
+
+// PUT api/v1/auth/updateDetails [Private access]
+exports.updateDetails = asyncHandler(async (req, res, next) => {
+  let user = req.user;
+  const { email, name } = { ...req.body };
+
+  if (email) {
+    user.email = email;
+  }
+  if (name) {
+    user.name = name;
+  }
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    data: req.user
+  });
+});
+
+// PUT api/v1/auth/updatePassword [Private access]
+exports.updatePassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('+password');
+
+  if (!(await user.matchPass(req.body.currentPassword))) {
+    return next(new ErrorResponse('Incorrect password', 401));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save({ validateBeforeSave: false });
+
+  sendTokenRes(user, 200, res);
+});
 
 // POST api/v1/auth/forgotPassword
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
@@ -90,11 +124,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
       data: 'Mail could not be sent'
     });
   }
-
-  res.status(200).json({
-    success: true,
-    data: 'Mail sent'
-  });
 });
 
 // PUT api/v1/auth/resetPassword/:resetToken
