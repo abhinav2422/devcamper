@@ -21,11 +21,13 @@ const {
 
 // Include other resources
 const courseRouter = require('./courses');
+const reviewRouter = require('./reviews');
 
 const router = express.Router();
 
 // Re-route to other resources
 router.use('/:id/courses', courseRouter); //id is bootcamp id here
+router.use('/:id/reviews', reviewRouter);
 
 router
   .route('/')

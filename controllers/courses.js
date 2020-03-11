@@ -3,10 +3,10 @@ const asyncHandler = require('../middleware/asyncHandler');
 const Course = require('../models/Course');
 const Bootcamp = require('../models/Bootcamp');
 
-// GET courses api/v1/courses & api/v1/bootcamps/:bootcampId/courses
+// GET courses api/v1/courses & api/v1/bootcamps/:id/courses
 exports.getCourses = asyncHandler(async (req, res, next) => {
-  if (req.params.bootcampId) {
-    const courses = await Course.find({ bootcamp: req.params.bootcampId });
+  if (req.params.id) {
+    const courses = await Course.find({ bootcamp: req.params.id });
 
     res.status(200).json({
       success: true,
@@ -37,7 +37,7 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
   });
 });
 
-// POST a course api/v1/bootcamps/:bootcampId/courses [Private access]
+// POST a course api/v1/bootcamps/:id/courses [Private access]
 exports.createCourse = asyncHandler(async (req, res, next) => {
   req.body.bootcamp = req.params.id; //req.params.id is bootcamp id
   req.body.user = req.user.id;
