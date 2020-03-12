@@ -58,3 +58,38 @@ exports.createReview = asyncHandler(async (req, res, next) => {
     data: review
   });
 });
+
+// PUT review api/v1/reviews/:id [Private Access]
+exports.updateReview = asyncHandler(async (req, res, next) => {
+  const { title, text, rating } = { ...req.body };
+
+  const review = await Review.findById(req.params.id);
+
+  if (title) {
+    review.title = title;
+  }
+  if (text) {
+    review.text = text;
+  }
+  if (rating) {
+    review.rating = rating;
+  }
+
+  review.save();
+
+  res.status(200).json({
+    success: true,
+    data: review
+  });
+});
+
+// DELETE review api/v1/reviews/:id [Private Access]
+exports.deleteReview = asyncHandler(async (req, res, next) => {
+  const review = await Review.findById(req.params.id);
+  await review.remove();
+
+  res.status(200).json({
+    success: true,
+    data: {}
+  });
+});

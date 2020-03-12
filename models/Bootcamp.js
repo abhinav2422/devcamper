@@ -72,7 +72,7 @@ const BootcampSchema = new mongoose.Schema(
     averageRating: {
       type: Number,
       min: [1, 'Rating must be at least 1'],
-      max: [10, 'Rating must can not be more than 10']
+      max: [10, 'Rating can not be more than 10']
     },
     averageCost: Number,
     photo: {
@@ -138,9 +138,10 @@ BootcampSchema.pre('save', async function(next) {
   next();
 });
 
-// Cascade delete courses when deleting a bootcamp
+// Cascade delete courses and reviews when deleting a bootcamp
 BootcampSchema.pre('remove', async function(next) {
   await this.model('Course').deleteMany({ bootcamp: this._id });
+  await this.model('Review').deleteMany({ bootcamp: this._id });
   next();
 });
 
