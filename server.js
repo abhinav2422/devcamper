@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
 const connectDB = require('./config/db');
 const fileupload = require('express-fileupload');
 
@@ -27,6 +30,15 @@ app.use(express.json());
 
 // Cookie Parser
 app.use(cookieParser());
+
+// Mongo Sanitize (Prevent NoSql Injection)
+app.use(mongoSanitize());
+
+// Set Headers
+app.use(helmet());
+
+// Prevent Cross Site Scripting
+app.use(xss());
 
 //Logging middleware
 if (process.env.NODE_ENV === 'development') {
