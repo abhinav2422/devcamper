@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xss = require('xss-clean');
+const rateLimiter = require('express-rate-limit');
+const cors = require('cors');
 const connectDB = require('./config/db');
 const fileupload = require('express-fileupload');
 
@@ -39,6 +41,16 @@ app.use(helmet());
 
 // Prevent Cross Site Scripting
 app.use(xss());
+
+// Rate Limiter
+const limiter = rateLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 100
+});
+app.use(limiter);
+
+// Cross Origin Resource Sharing
+app.use(cors());
 
 //Logging middleware
 if (process.env.NODE_ENV === 'development') {
