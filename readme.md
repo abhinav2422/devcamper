@@ -33,3 +33,5 @@ node seeder -d
 # Import all data
 node seeder -i
 ```
+
+## Documentation with examples [here](https://documenter.getpostman.com/view/10164493/SzS2yUhh?version=latest)
