@@ -3,7 +3,10 @@ const advancedResults = (model, populate) => async (req, res, next) => {
 
   // Create operators such as lte, gt, etc
   let queryStr = JSON.stringify(reqQuery);
-  queryStr = queryStr.replace(/\b(lt|lte|gt|gte|in)\b/g, match => `$${match}`);
+  queryStr = queryStr.replace(
+    /\b(lt|lte|gt|gte|in)\b/g,
+    (match) => `$${match}`
+  );
 
   // Select out certain fields
   if (select) {
@@ -18,7 +21,7 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   }
 
   page = parseInt(page) || 1;
-  limit = parseInt(limit) || 25;
+  limit = parseInt(limit) || 2;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const total = await model.countDocuments();
@@ -39,14 +42,14 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   if (startIndex > 0) {
     pagination.prev = {
       page: page - 1,
-      limit
+      limit,
     };
   }
 
   if (endIndex < total) {
     pagination.next = {
       page: page + 1,
-      limit
+      limit,
     };
   }
 
@@ -54,7 +57,7 @@ const advancedResults = (model, populate) => async (req, res, next) => {
     success: true,
     count: results.length,
     pagination,
-    data: results
+    data: results,
   };
 
   next();

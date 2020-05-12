@@ -1,3 +1,7 @@
 import { combineReducers } from 'redux';
 
-export default combineReducers({});
+import bootcampReducer from './bootcampReducer';
+
+export default combineReducers({
+  bootcamps: bootcampReducer,
+});
