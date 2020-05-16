@@ -20,7 +20,7 @@ export const getUser = () => async (dispatch, getState) => {
 
     dispatch({
       type: USER_LOADED,
-      payload: user,
+      payload: user.data,
     });
   } catch (err) {
     dispatch(getErrors(err.response.data, err.response.status));
@@ -48,6 +48,7 @@ export const registerUser = ({ name, email, password, role }) => async (
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
+    dispatch(getUser());
   } catch (err) {
     dispatch(
       getErrors(err.response.data, err.response.status, 'REGISTRATION_FAIL')
@@ -58,7 +59,7 @@ export const registerUser = ({ name, email, password, role }) => async (
   }
 };
 
-export const login = ({ email, password }) => async (dispatch) => {
+export const login = ({ email, password }, router) => async (dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -74,6 +75,7 @@ export const login = ({ email, password }) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
+    dispatch(getUser());
   } catch (err) {
     dispatch(getErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
     dispatch({
@@ -82,14 +84,12 @@ export const login = ({ email, password }) => async (dispatch) => {
   }
 };
 
-export const logout = () => {
-  console.log('bedw');
+export const logout = () => async (dispatch) => {
+  await axios.get('/api/v1/auth/logout');
 
-  // axios.get('/api/v1/auth/logout').then((res) => {
-  return {
+  dispatch({
     type: LOGOUT_SUCCESS,
-  };
-  // });
+  });
 };
 
 const tokenConfig = (getState) => {

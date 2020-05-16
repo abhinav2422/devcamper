@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Container, Jumbotron, Button } from 'reactstrap';
@@ -23,6 +24,13 @@ class Home extends Component {
                 <Button color="primary">Bootcamps</Button>
               </Link>
             </p>
+            {this.props.user && this.props.user.role === 'publisher' ? (
+              <p className="lead">
+                <Link to="/dashboard">
+                  <Button color="primary">Manage bootcamps</Button>
+                </Link>
+              </p>
+            ) : null}
           </Jumbotron>
         </Container>
       </div>
@@ -30,4 +38,8 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const matchStateToProps = (state) => ({
+  user: state.auth.user,
+});
+
+export default connect(matchStateToProps, {})(Home);

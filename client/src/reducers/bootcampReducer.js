@@ -1,7 +1,8 @@
-import { LOADING, GET_BOOTCAMPS } from '../actions/types';
+import { LOADING, GET_BOOTCAMPS, GET_BOOTCAMP } from '../actions/types';
 
 const initialState = {
   bootcamps: [],
+  bootcamp: {},
   loading: false,
 };
 
@@ -11,6 +12,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
         bootcamps: action.payload.data.data,
+        loading: false,
+      };
+    case GET_BOOTCAMP:
+      console.log(action.payload.data.data);
+
+      return {
+        ...state,
+        bootcamp: action.payload.data.data,
         loading: false,
       };
     case LOADING:

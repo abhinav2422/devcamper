@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import {
@@ -13,7 +14,7 @@ import {
   Button,
 } from 'reactstrap';
 
-import { getBootcamps } from '../../actions/bootcampAction';
+import { getBootcamps, getBootcamp } from '../../actions/bootcampAction';
 
 class BootcampHome extends Component {
   componentDidMount() {
@@ -41,7 +42,9 @@ class BootcampHome extends Component {
                 <CardBody>
                   <CardTitle>{bootcamp.name}</CardTitle>
                   <CardText>{bootcamp.description}</CardText>
-                  <Button>Know More</Button>
+                  <Link to={'/bootcamps/' + bootcamp._id}>
+                    <Button>Know More</Button>
+                  </Link>
                 </CardBody>
               </Card>
             </Col>
@@ -57,4 +60,6 @@ const matchStateToProps = (state) => ({
   isLoading: state.bootcamps.loading,
 });
 
-export default connect(matchStateToProps, { getBootcamps })(BootcampHome);
+export default connect(matchStateToProps, { getBootcamps, getBootcamp })(
+  BootcampHome
+);

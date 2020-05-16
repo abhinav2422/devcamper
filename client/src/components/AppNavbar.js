@@ -58,6 +58,9 @@ class AppNavbar extends Component {
             <Link to="/">
               <NavbarBrand>DevCamper</NavbarBrand>
             </Link>
+            <NavLink style={{ color: 'gray' }}>
+              {this.props.user ? `Welcome ${this.props.user.name}` : null}
+            </NavLink>
             <NavbarToggler onClick={this.toggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
@@ -78,6 +81,7 @@ class AppNavbar extends Component {
 
 const matchStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(matchStateToProps, {})(AppNavbar);

@@ -81,7 +81,9 @@ class RegisterUser extends Component {
           <ModalHeader toggle={this.toggle}>Register</ModalHeader>
           <Container>
             {this.state.message ? (
-              <Alert color="danger">{this.state.message}</Alert>
+              <Alert className="mt-2" color="danger">
+                {this.state.message}
+              </Alert>
             ) : null}
             <Form onSubmit={this.onSubmit}>
               <FormGroup className="mt-2">

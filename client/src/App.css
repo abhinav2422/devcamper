@@ -26,3 +26,9 @@
   margin-right: 0;
   margin-left: 0;
 }
+
+.boo {
+  border: 0.1px solid black;
+  width: 100%;
+  height: auto;
+}
