@@ -1,6 +1,8 @@
 // Bootcamp
 export const GET_BOOTCAMPS = 'GET_BOOTCAMPS';
 export const GET_BOOTCAMP = 'GET_BOOTCAMP';
+export const CREATE_BOOTCAMP = 'CREATE_BOOTCAMP';
+export const CREATE_BOOTCAMP_FAIL = 'CREATE_BOOTCAMP_FAIL';
 
 // Course
 export const GET_COURSES = 'GET_COURSES';

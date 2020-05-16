@@ -17,6 +17,10 @@
   color: #61dafb;
 }
 
+.overWrite {
+  text-align: left;
+}
+
 .bootcampImage {
   width: auto;
   height: 300px;

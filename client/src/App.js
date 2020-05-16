@@ -9,8 +9,10 @@ import { getUser } from './actions/authAction';
 
 import AppNavbar from './components/AppNavbar';
 import Home from './components/Home';
+import Dashboard from './components/users/Dashboard';
 import BootcampHome from './components/bootcamps/BootcampHome';
 import SingleBootcamp from './components/bootcamps/SingleBootcamp';
+import CreateBootcamp from './components/bootcamps/CreateBootcamp';
 
 class App extends Component {
   componentDidMount() {
@@ -26,6 +28,8 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/bootcamps" component={BootcampHome} />
             <Route exact path="/bootcamps/:id" component={SingleBootcamp} />
+            <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/create/bootcamp" component={CreateBootcamp} />
           </div>
         </Provider>
       </Router>

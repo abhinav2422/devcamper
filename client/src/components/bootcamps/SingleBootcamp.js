@@ -16,29 +16,33 @@ class SingleBootcamp extends Component {
     var show = (
       <div>
         <Row>
-          <Col sm="4">
+          <Col sm="4" style={{ borderRight: '1px solid grey' }}>
             <img
               src={`/uploads/${bootcamp.photo}`}
               className="boo"
               alt="No display for this bootcamp"
             />
             <h3 className="mt-4">{bootcamp.name}</h3>
-            <h4 className="mt-4">{bootcamp.website}</h4>
-            <h4 className="mt-2">{bootcamp.email}</h4>
-            <h4 className="mt-2">{bootcamp.phone}</h4>
+            <h4 className="mt-4">Details:</h4>
+            <h5 className="mt-2">{bootcamp.website}</h5>
+            <h5 className="mt-2">{bootcamp.email}</h5>
+            <h5 className="mt-2">{bootcamp.phone}</h5>
             <h5 className="mt-4">{bootcamp.averageCost}</h5>
           </Col>
           <Col sm="8">
             <p mt-2>{bootcamp.description}</p>
+            <hr />
             <p>
               Careers:{' '}
               {bootcamp.careers
                 ? bootcamp.careers.map((career) => `${career}, `)
                 : null}
             </p>
+            <hr />
             <p mt-2>
               City: {bootcamp.location ? bootcamp.location.city : null}
             </p>
+            <hr />
             <Row>
               <Col>
                 Job assistance: {bootcamp.jobAssistance ? 'Given' : 'Not Given'}
@@ -47,6 +51,7 @@ class SingleBootcamp extends Component {
                 Job guarantee: {bootcamp.jobGuarantee ? 'Given' : 'Not Given'}
               </Col>
             </Row>
+            <hr />
             Courses Reviews
           </Col>
         </Row>
