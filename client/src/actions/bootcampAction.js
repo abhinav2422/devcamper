@@ -6,6 +6,12 @@ import {
   GET_BOOTCAMP,
   CREATE_BOOTCAMP,
   CREATE_BOOTCAMP_FAIL,
+  DELETE_BOOTCAMP,
+  UPDATE_BOOTCAMP,
+  UPDATE_BOOTCAMP_FAIL,
+  UPLOAD_IMAGE,
+  UPLOAD_IMAGE_FAIL,
+  CLEAR_MESSAGE,
 } from './types';
 import { getCourses } from './courseAction';
 import { getErrors } from './errorAction';
@@ -87,4 +93,101 @@ export const createBootcamp = ({
       type: CREATE_BOOTCAMP_FAIL,
     });
   }
+};
+
+export const updateBootcamp = (
+  { name, description, website, email, phone, address },
+  id
+) => async (dispatch, getState) => {
+  dispatch({ type: LOADING });
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: 'Bearer ' + getState().auth.token,
+    },
+  };
+
+  const body = JSON.stringify({
+    name,
+    description,
+    website,
+    email,
+    phone,
+    address,
+  });
+
+  try {
+    const bootcamp = await axios.put(`/api/v1/bootcamps/${id}`, body, config);
+    dispatch({
+      type: UPDATE_BOOTCAMP,
+      payload: bootcamp,
+    });
+  } catch (error) {
+    dispatch(
+      getErrors(
+        error.response.data,
+        error.response.status,
+        'BOOTCAMP_UPDATE_ERROR'
+      )
+    );
+    dispatch({
+      type: UPDATE_BOOTCAMP_FAIL,
+    });
+  }
+};
+
+export const deleteBootcamp = (id) => async (dispatch, getState) => {
+  dispatch({ type: LOADING });
+  const config = {
+    headers: {
+      authorization: 'Bearer ' + getState().auth.token,
+    },
+  };
+
+  await axios.delete(`/api/v1/bootcamps/${id}`, config);
+  dispatch({
+    type: DELETE_BOOTCAMP,
+    payload: 'DELETE_SUCCESSFUL',
+  });
+};
+
+export const uploadPhoto = (file, id) => async (dispatch, getState) => {
+  dispatch({ type: LOADING });
+
+  const data = new FormData();
+  data.append('files', file);
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: 'Bearer ' + getState().auth.token,
+    },
+  };
+
+  try {
+    await axios.put(`/api/v1/bootcamps/${id}/photo`, data, config);
+    dispatch({
+      type: UPLOAD_IMAGE,
+      payload: 'UPLOAD_SUCCESSFUL',
+    });
+  } catch (error) {
+    dispatch(
+      getErrors(
+        error.response.data,
+        error.response.status,
+        'UPLOAD_IMAGE_ERROR'
+      )
+    );
+    dispatch({
+      type: UPLOAD_IMAGE_FAIL,
+      payload: 'UPLOAD_FAIL',
+    });
+  }
+};
+
+export const clearMessage = () => {
+  return {
+    type: CLEAR_MESSAGE,
+  };
 };

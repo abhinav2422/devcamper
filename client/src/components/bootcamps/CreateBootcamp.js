@@ -89,6 +89,7 @@ class CreateBootcamp extends Component {
     return (
       <div>
         <Container className="overWrite mb-4">
+          <h2 style={{ textAlign: 'center' }}>Create a bootcamp</h2>
           <Form onSubmit={this.onSubmit}>
             <FormGroup>
               <Label>Name*</Label>
