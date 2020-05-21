@@ -3,6 +3,7 @@ import {
   GET_REVIEWS,
   CREATE_REVIEW_FAIL,
   CREATE_REVIEW,
+  DELETE_REVIEW,
 } from '../actions/types';
 
 const initialState = {
@@ -34,6 +35,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
         reviewLoading: false,
+      };
+    case DELETE_REVIEW:
+      return {
+        ...state,
+        reviewLoading: false,
+        reviews: state.reviews.filter(
+          (review) => review._id !== action.payload
+        ),
       };
     default:
       return state;

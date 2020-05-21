@@ -27,6 +27,7 @@ import {
   clearMessage,
 } from '../../actions/bootcampAction';
 import { deleteCourse } from '../../actions/courseAction';
+import { deleteReview } from '../../actions/reviewAction';
 import CreateCourse from '../courses/CreateCourse';
 import CreateReview from '../reviews/CreateReview';
 
@@ -158,7 +159,7 @@ class SingleBootcamp extends Component {
             <h5 className="mt-2">{bootcamp.website}</h5>
             <h5 className="mt-2">{bootcamp.email}</h5>
             <h5 className="mt-2">{bootcamp.phone}</h5>
-            <h5 className="mt-4">Average Fees: ${bootcamp.averageCost}</h5>
+            <h5 className="mt-4 mb-4">Average Fees: ${bootcamp.averageCost}</h5>
           </Col>
           <Col sm="8">
             <p mt-2>{bootcamp.description}</p>
@@ -183,6 +184,14 @@ class SingleBootcamp extends Component {
               </Col>
             </Row>
             <hr />
+            <Button color="secondary" href="#courses">
+              See Courses
+            </Button>
+            <hr />
+            Rating: {bootcamp.averageRating}/10 &nbsp;&nbsp;&nbsp;&nbsp;
+            <Button color="secondary" href="#reviews">
+              Read Reviews
+            </Button>
           </Col>
         </Row>
       </div>
@@ -456,7 +465,7 @@ class SingleBootcamp extends Component {
     );
 
     var showCourse = (
-      <div className="mt-3 mb-3">
+      <div className="mt-3 mb-3" id="courses">
         <h3>Courses</h3>{' '}
         {this.props.courseLoading ? (
           <Spinner className="ml-2" color="primary" />
@@ -510,13 +519,21 @@ class SingleBootcamp extends Component {
                 <p>{course.scholarshipsAvailable ? 'Yes' : 'No'}</p>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <h5>Tuition: </h5>
+              </Col>
+              <Col className="overWrite">
+                <p>${course.tuition}</p>
+              </Col>
+            </Row>
           </Container>
         ))}
       </div>
     );
 
     var showReview = (
-      <div className="mt-3 mb-3">
+      <div className="mt-3 mb-3" id="reviews">
         <h3>Reviews</h3>{' '}
         {this.props.reviewLoading ? (
           <Spinner className="ml-2" color="primary" />
@@ -524,8 +541,19 @@ class SingleBootcamp extends Component {
         {this.props.reviews.length < 1 ? <h4>No reviews to show</h4> : null}
         {this.props.reviews.map((review) => (
           <Container className="mb-2" style={{ border: '1px dotted black' }}>
-            <h4>{review.rating}/10</h4>
-            <h5 className="mt-2">{review.title}</h5>
+            {this.props.user && review.user === this.props.user._id ? (
+              <Button
+                color="danger"
+                className=" float-right mt-2"
+                onClick={() => {
+                  this.props.deleteReview(review._id);
+                }}
+              >
+                Delete review
+              </Button>
+            ) : null}
+            <h4 className="mt-2">{review.rating}/10</h4>
+            <h5>{review.title}</h5>
             <p>{review.text}</p>
           </Container>
         ))}
@@ -577,4 +605,5 @@ export default connect(matchStateToProps, {
   uploadPhoto,
   clearMessage,
   deleteCourse,
+  deleteReview,
 })(SingleBootcamp);

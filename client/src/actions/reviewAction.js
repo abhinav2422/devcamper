@@ -5,6 +5,7 @@ import {
   GET_REVIEWS,
   CREATE_REVIEW,
   CREATE_REVIEW_FAIL,
+  DELETE_REVIEW,
 } from './types';
 
 import { getErrors } from './errorAction';
@@ -54,4 +55,14 @@ export const createReview = ({ title, text, rating }, id) => async (
       type: CREATE_REVIEW_FAIL,
     });
   }
+};
+
+export const deleteReview = (id) => async (dispatch, getState) => {
+  dispatch({ type: REVIEW_LOADING });
+
+  await axios.delete(`/api/v1/reviews/${id}`, tokenConfig(getState));
+  dispatch({
+    type: DELETE_REVIEW,
+    payload: id,
+  });
 };
