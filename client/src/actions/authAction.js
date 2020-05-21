@@ -92,7 +92,7 @@ export const logout = () => async (dispatch) => {
   });
 };
 
-const tokenConfig = (getState) => {
+export const tokenConfig = (getState) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',

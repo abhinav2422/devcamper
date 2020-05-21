@@ -11,8 +11,10 @@ import {
   UPDATE_BOOTCAMP_FAIL,
   UPLOAD_IMAGE,
   UPLOAD_IMAGE_FAIL,
+  GET_BOOTCAMPS_BY_DISTANCE,
   CLEAR_MESSAGE,
 } from './types';
+import { tokenConfig } from './authAction';
 import { getCourses } from './courseAction';
 import { getErrors } from './errorAction';
 
@@ -55,13 +57,6 @@ export const createBootcamp = ({
 }) => async (dispatch, getState) => {
   dispatch({ type: LOADING });
 
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: 'Bearer ' + getState().auth.token,
-    },
-  };
-
   const body = JSON.stringify({
     name,
     description,
@@ -76,7 +71,11 @@ export const createBootcamp = ({
   });
 
   try {
-    const bootcamp = await axios.post(`/api/v1/bootcamps`, body, config);
+    const bootcamp = await axios.post(
+      `/api/v1/bootcamps`,
+      body,
+      tokenConfig(getState)
+    );
     dispatch({
       type: CREATE_BOOTCAMP,
       payload: bootcamp,
@@ -101,13 +100,6 @@ export const updateBootcamp = (
 ) => async (dispatch, getState) => {
   dispatch({ type: LOADING });
 
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: 'Bearer ' + getState().auth.token,
-    },
-  };
-
   const body = JSON.stringify({
     name,
     description,
@@ -118,7 +110,11 @@ export const updateBootcamp = (
   });
 
   try {
-    const bootcamp = await axios.put(`/api/v1/bootcamps/${id}`, body, config);
+    const bootcamp = await axios.put(
+      `/api/v1/bootcamps/${id}`,
+      body,
+      tokenConfig(getState)
+    );
     dispatch({
       type: UPDATE_BOOTCAMP,
       payload: bootcamp,
@@ -158,15 +154,12 @@ export const uploadPhoto = (file, id) => async (dispatch, getState) => {
   const data = new FormData();
   data.append('files', file);
 
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: 'Bearer ' + getState().auth.token,
-    },
-  };
-
   try {
-    await axios.put(`/api/v1/bootcamps/${id}/photo`, data, config);
+    await axios.put(
+      `/api/v1/bootcamps/${id}/photo`,
+      data,
+      tokenConfig(getState)
+    );
     dispatch({
       type: UPLOAD_IMAGE,
       payload: 'UPLOAD_SUCCESSFUL',
@@ -184,6 +177,16 @@ export const uploadPhoto = (file, id) => async (dispatch, getState) => {
       payload: 'UPLOAD_FAIL',
     });
   }
+};
+
+export const getBootcampsByRadius = (zipcode, distance) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  const bootcamps = await axios.get(`/api/v1/bootcamps/${zipcode}/${distance}`);
+
+  dispatch({
+    type: GET_BOOTCAMPS_BY_DISTANCE,
+    payload: bootcamps,
+  });
 };
 
 export const clearMessage = () => {

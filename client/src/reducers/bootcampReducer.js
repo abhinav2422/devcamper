@@ -9,6 +9,7 @@ import {
   UPDATE_BOOTCAMP_FAIL,
   UPLOAD_IMAGE,
   UPLOAD_IMAGE_FAIL,
+  GET_BOOTCAMPS_BY_DISTANCE,
   CLEAR_MESSAGE,
 } from '../actions/types';
 
@@ -17,6 +18,7 @@ const initialState = {
   pagination: {},
   bootcamp: {},
   message: '',
+  toggleFilters: true,
   loading: false,
 };
 
@@ -25,6 +27,7 @@ export default function (state = initialState, action) {
     case GET_BOOTCAMPS:
       return {
         ...state,
+        toggleFilters: true,
         bootcamps: action.payload.data.data,
         pagination: action.payload.data.pagination,
         loading: false,
@@ -76,6 +79,13 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         message: action.payload,
+      };
+    case GET_BOOTCAMPS_BY_DISTANCE:
+      return {
+        ...state,
+        loading: false,
+        toggleFilters: false,
+        bootcamps: action.payload.data.data,
       };
     case CLEAR_MESSAGE:
       return {

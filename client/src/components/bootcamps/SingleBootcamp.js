@@ -134,11 +134,11 @@ class SingleBootcamp extends Component {
               alt="No display for this bootcamp"
             />
             <h3 className="mt-4">{bootcamp.name}</h3>
-            <h4 className="mt-4">Details:</h4>
+            <h4 className="mt-4">Contact Details:</h4>
             <h5 className="mt-2">{bootcamp.website}</h5>
             <h5 className="mt-2">{bootcamp.email}</h5>
             <h5 className="mt-2">{bootcamp.phone}</h5>
-            <h5 className="mt-4">{bootcamp.averageCost}</h5>
+            <h5 className="mt-4">Average Fees: ${bootcamp.averageCost}</h5>
           </Col>
           <Col sm="8">
             <p mt-2>{bootcamp.description}</p>
