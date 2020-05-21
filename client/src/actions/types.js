@@ -19,6 +19,13 @@ export const CREATE_COURSE = 'CREATE_COURSE';
 export const CREATE_COURSE_FAIL = 'CREATE_COURSE_FAIL';
 export const DELETE_COURSE = 'DELETE_COURSE';
 
+// Review
+export const REVIEW_LOADING = 'REVIEW_LOADING';
+export const GET_REVIEWS = 'GET_REVIEWS';
+export const CREATE_REVIEW = 'CREATE_REVIEW';
+export const CREATE_REVIEW_FAIL = 'CREATE_REVIEW_FAIL';
+export const DELETE_REVIEW = 'DELETE_REVIEW';
+
 // User
 export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';

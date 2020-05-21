@@ -16,6 +16,7 @@ import {
 } from './types';
 import { tokenConfig } from './authAction';
 import { getCourses } from './courseAction';
+import { getReview } from './reviewAction';
 import { getErrors } from './errorAction';
 
 export const getBootcamps = (filters) => async (dispatch) => {
@@ -36,6 +37,7 @@ export const getBootcamps = (filters) => async (dispatch) => {
 export const getBootcamp = (id) => async (dispatch) => {
   dispatch({ type: LOADING });
   dispatch(getCourses(id));
+  dispatch(getReview(id));
   const bootcamp = await axios.get(`/api/v1/bootcamps/${id}`);
   dispatch({
     type: GET_BOOTCAMP,

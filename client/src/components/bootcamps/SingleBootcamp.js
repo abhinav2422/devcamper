@@ -484,6 +484,38 @@ class SingleBootcamp extends Component {
       </div>
     );
 
+    var showReview = (
+      <div className="mt-3 mb-3">
+        <h3>Reviews</h3>{' '}
+        {this.props.reviewLoading ? (
+          <Spinner className="ml-2" color="primary" />
+        ) : null}
+        {this.props.reviews.length < 1 ? <h4>No reviews to show</h4> : null}
+        {this.props.reviews.map((review) => (
+          <Container className="mb-2" style={{ border: '1px dotted black' }}>
+            {this.props.user && review.user === this.props.user._id ? (
+              <Button
+                color="danger"
+                className=" float-right mt-2"
+                onClick={() => {
+                  // this.props.deleteReview(review._id);
+                }}
+              >
+                Delete review
+              </Button>
+            ) : null}
+            <Row>
+              <Col sm="2">{review.rating}/10</Col>
+              <Col>
+                <h5 className="mt-2">{review.title}</h5>
+              </Col>
+            </Row>
+            <p>{review.text}</p>
+          </Container>
+        ))}
+      </div>
+    );
+
     return (
       <div>
         <Container>
@@ -494,6 +526,7 @@ class SingleBootcamp extends Component {
           />
           {show}
           {showCourse}
+          {showReview}
           {tool}
           {deleteModal}
           {updateModal}
@@ -514,6 +547,8 @@ const matchStateToProps = (state) => ({
   courses: state.courses.courses,
   course: state.courses.course,
   courseLoading: state.courses.courseLoading,
+  reviewLoading: state.reviews.reviewLoading,
+  reviews: state.reviews.reviews,
 });
 
 export default connect(matchStateToProps, {
