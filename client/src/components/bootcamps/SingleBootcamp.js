@@ -26,6 +26,7 @@ import {
   uploadPhoto,
   clearMessage,
 } from '../../actions/bootcampAction';
+import CreateCourse from '../courses/CreateCourse';
 
 class SingleBootcamp extends Component {
   state = {
@@ -40,6 +41,7 @@ class SingleBootcamp extends Component {
     address: '',
     file: {},
     message: null,
+    createCourseModal: false,
   };
 
   componentDidMount() {
@@ -63,6 +65,10 @@ class SingleBootcamp extends Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
+  };
+
+  toggleCourse = () => {
+    this.setState({ createCourseModal: !this.state.createCourseModal });
   };
 
   handleMulti = (e) => {
@@ -118,6 +124,10 @@ class SingleBootcamp extends Component {
       this.state.uploadPhotoModal
     ) {
       this.uploadPhoto();
+      window.location.reload();
+    }
+
+    if (this.props.course && this.props.course.title) {
       window.location.reload();
     }
   }
@@ -191,7 +201,11 @@ class SingleBootcamp extends Component {
               🖼
             </span>
           </Action>
-          <Action style={{ backgroundColor: '#347aeb' }} text="Add a Course">
+          <Action
+            style={{ backgroundColor: '#347aeb' }}
+            text="Add a Course"
+            onClick={this.toggleCourse}
+          >
             +
           </Action>
           <Action
@@ -403,6 +417,57 @@ class SingleBootcamp extends Component {
       </div>
     );
 
+    var createCourse = (
+      <Modal isOpen={this.state.createCourseModal} toggle={this.toggleCourse}>
+        <ModalHeader toggle={this.toggleCourse}>Create a Course</ModalHeader>
+        <CreateCourse id={bootcamp._id}></CreateCourse>
+      </Modal>
+    );
+
+    var showCourse = (
+      <div className="mt-3 mb-3">
+        <h3>Courses</h3>
+        {this.props.courses.length < 1 ? <h4>No courses to show</h4> : null}
+        {this.props.courses.map((course) => (
+          <Container className="courses mb-2">
+            <h4 className="mt-2">{course.title}</h4>
+            <Row>
+              <Col sm="4">
+                <h5>Description: </h5>
+              </Col>
+              <Col className="overWrite">
+                <p>{course.description}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="4">
+                <h5>Weeks: </h5>
+              </Col>
+              <Col className="overWrite">
+                <p>{course.weeks}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="4">
+                <h5>Minimum Skills: </h5>
+              </Col>
+              <Col className="overWrite">
+                <p>{course.minimumSkill}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="4">
+                <h5>Scholarships Available: </h5>
+              </Col>
+              <Col className="overWrite">
+                <p>{course.scholarshipsAvailable ? 'Yes' : 'No'}</p>
+              </Col>
+            </Row>
+          </Container>
+        ))}
+      </div>
+    );
+
     return (
       <div>
         <Container>
@@ -412,10 +477,12 @@ class SingleBootcamp extends Component {
             loading={this.props.isLoading}
           />
           {show}
+          {showCourse}
           {tool}
           {deleteModal}
           {updateModal}
           {uploadModal}
+          {createCourse}
         </Container>
       </div>
     );
@@ -428,6 +495,8 @@ const matchStateToProps = (state) => ({
   bootcampMessage: state.bootcamps.message,
   error: state.error,
   isLoading: state.bootcamps.loading,
+  courses: state.courses.courses,
+  course: state.courses.course,
 });
 
 export default connect(matchStateToProps, {

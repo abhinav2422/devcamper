@@ -36,3 +36,7 @@
   width: 100%;
   height: auto;
 }
+
+.courses {
+  border: 1px dashed black;
+}
