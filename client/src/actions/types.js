@@ -17,6 +17,7 @@ export const COURSE_LOADING = 'COURSE_LOADING';
 export const GET_COURSES = 'GET_COURSES';
 export const CREATE_COURSE = 'CREATE_COURSE';
 export const CREATE_COURSE_FAIL = 'CREATE_COURSE_FAIL';
+export const DELETE_COURSE = 'DELETE_COURSE';
 
 // User
 export const USER_LOADING = 'USER_LOADING';

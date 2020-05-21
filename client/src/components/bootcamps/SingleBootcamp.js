@@ -26,6 +26,7 @@ import {
   uploadPhoto,
   clearMessage,
 } from '../../actions/bootcampAction';
+import { deleteCourse } from '../../actions/courseAction';
 import CreateCourse from '../courses/CreateCourse';
 
 class SingleBootcamp extends Component {
@@ -173,7 +174,6 @@ class SingleBootcamp extends Component {
               </Col>
             </Row>
             <hr />
-            Courses Reviews
           </Col>
         </Row>
       </div>
@@ -426,13 +426,29 @@ class SingleBootcamp extends Component {
 
     var showCourse = (
       <div className="mt-3 mb-3">
-        <h3>Courses</h3>
+        <h3>Courses</h3>{' '}
+        {this.props.courseLoading ? (
+          <Spinner className="ml-2" color="primary" />
+        ) : null}
         {this.props.courses.length < 1 ? <h4>No courses to show</h4> : null}
         {this.props.courses.map((course) => (
           <Container className="courses mb-2">
+            {bootcamp &&
+            this.props.user &&
+            bootcamp.user === this.props.user._id ? (
+              <Button
+                color="danger"
+                className=" float-right mt-2"
+                onClick={() => {
+                  this.props.deleteCourse(course._id);
+                }}
+              >
+                Delete course
+              </Button>
+            ) : null}
             <h4 className="mt-2">{course.title}</h4>
             <Row>
-              <Col sm="4">
+              <Col>
                 <h5>Description: </h5>
               </Col>
               <Col className="overWrite">
@@ -440,7 +456,7 @@ class SingleBootcamp extends Component {
               </Col>
             </Row>
             <Row>
-              <Col sm="4">
+              <Col>
                 <h5>Weeks: </h5>
               </Col>
               <Col className="overWrite">
@@ -448,7 +464,7 @@ class SingleBootcamp extends Component {
               </Col>
             </Row>
             <Row>
-              <Col sm="4">
+              <Col>
                 <h5>Minimum Skills: </h5>
               </Col>
               <Col className="overWrite">
@@ -456,7 +472,7 @@ class SingleBootcamp extends Component {
               </Col>
             </Row>
             <Row>
-              <Col sm="4">
+              <Col>
                 <h5>Scholarships Available: </h5>
               </Col>
               <Col className="overWrite">
@@ -497,6 +513,7 @@ const matchStateToProps = (state) => ({
   isLoading: state.bootcamps.loading,
   courses: state.courses.courses,
   course: state.courses.course,
+  courseLoading: state.courses.courseLoading,
 });
 
 export default connect(matchStateToProps, {
@@ -505,4 +522,5 @@ export default connect(matchStateToProps, {
   updateBootcamp,
   uploadPhoto,
   clearMessage,
+  deleteCourse,
 })(SingleBootcamp);

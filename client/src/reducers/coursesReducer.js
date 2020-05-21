@@ -3,6 +3,7 @@ import {
   GET_COURSES,
   CREATE_COURSE,
   CREATE_COURSE_FAIL,
+  DELETE_COURSE,
 } from '../actions/types';
 
 const initialState = {
@@ -21,6 +22,7 @@ export default function (state = initialState, action) {
     case GET_COURSES:
       return {
         ...state,
+        courseLoading: false,
         courses: action.payload.data.data,
       };
     case CREATE_COURSE:
@@ -33,6 +35,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
         courseLoading: false,
+      };
+    case DELETE_COURSE:
+      return {
+        ...state,
+        courseLoading: false,
+        courses: state.courses.filter(
+          (course) => course._id !== action.payload
+        ),
       };
     default:
       return state;

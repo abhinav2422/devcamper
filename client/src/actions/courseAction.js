@@ -5,12 +5,14 @@ import {
   GET_COURSES,
   CREATE_COURSE,
   CREATE_COURSE_FAIL,
+  DELETE_COURSE,
 } from './types';
 
 import { getErrors } from './errorAction';
 import { tokenConfig } from './authAction';
 
 export const getCourses = (id) => async (dispatch) => {
+  dispatch({ type: COURSE_LOADING });
   const courses = await axios.get(`/api/v1/bootcamps/${id}/courses`);
   dispatch({
     type: GET_COURSES,
@@ -55,4 +57,14 @@ export const createCourse = (
       type: CREATE_COURSE_FAIL,
     });
   }
+};
+
+export const deleteCourse = (id) => async (dispatch, getState) => {
+  dispatch({ type: COURSE_LOADING });
+
+  await axios.delete(`/api/v1/courses/${id}`, tokenConfig(getState));
+  dispatch({
+    type: DELETE_COURSE,
+    payload: id,
+  });
 };
