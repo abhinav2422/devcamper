@@ -28,6 +28,7 @@ import {
 } from '../../actions/bootcampAction';
 import { deleteCourse } from '../../actions/courseAction';
 import CreateCourse from '../courses/CreateCourse';
+import CreateReview from '../reviews/CreateReview';
 
 class SingleBootcamp extends Component {
   state = {
@@ -43,6 +44,7 @@ class SingleBootcamp extends Component {
     file: {},
     message: null,
     createCourseModal: false,
+    createReviewModal: false,
   };
 
   componentDidMount() {
@@ -70,6 +72,10 @@ class SingleBootcamp extends Component {
 
   toggleCourse = () => {
     this.setState({ createCourseModal: !this.state.createCourseModal });
+  };
+
+  toggleReview = () => {
+    this.setState({ createReviewModal: !this.state.createReviewModal });
   };
 
   handleMulti = (e) => {
@@ -128,7 +134,10 @@ class SingleBootcamp extends Component {
       window.location.reload();
     }
 
-    if (this.props.course && this.props.course.title) {
+    if (
+      (this.props.course && this.props.course.title) ||
+      (this.props.review && this.props.review.title)
+    ) {
       window.location.reload();
     }
   }
@@ -216,6 +225,21 @@ class SingleBootcamp extends Component {
             <span role="img" aria-label="Delete Bootcamp">
               🗑
             </span>
+          </Action>
+        </Fab>
+      );
+    }
+
+    var reviewBut;
+    if (this.props.user && this.props.user.role === 'user') {
+      reviewBut = (
+        <Fab position={{ bottom: 0, left: 0 }} icon="⭐">
+          <Action
+            style={{ backgroundColor: '#347aeb' }}
+            text="Add a Review"
+            onClick={this.toggleReview}
+          >
+            +
           </Action>
         </Fab>
       );
@@ -424,6 +448,13 @@ class SingleBootcamp extends Component {
       </Modal>
     );
 
+    var createReview = (
+      <Modal isOpen={this.state.createReviewModal} toggle={this.toggleReview}>
+        <ModalHeader toggle={this.toggleReview}>Write a review</ModalHeader>
+        <CreateReview id={bootcamp._id}></CreateReview>
+      </Modal>
+    );
+
     var showCourse = (
       <div className="mt-3 mb-3">
         <h3>Courses</h3>{' '}
@@ -493,23 +524,8 @@ class SingleBootcamp extends Component {
         {this.props.reviews.length < 1 ? <h4>No reviews to show</h4> : null}
         {this.props.reviews.map((review) => (
           <Container className="mb-2" style={{ border: '1px dotted black' }}>
-            {this.props.user && review.user === this.props.user._id ? (
-              <Button
-                color="danger"
-                className=" float-right mt-2"
-                onClick={() => {
-                  // this.props.deleteReview(review._id);
-                }}
-              >
-                Delete review
-              </Button>
-            ) : null}
-            <Row>
-              <Col sm="2">{review.rating}/10</Col>
-              <Col>
-                <h5 className="mt-2">{review.title}</h5>
-              </Col>
-            </Row>
+            <h4>{review.rating}/10</h4>
+            <h5 className="mt-2">{review.title}</h5>
             <p>{review.text}</p>
           </Container>
         ))}
@@ -528,10 +544,12 @@ class SingleBootcamp extends Component {
           {showCourse}
           {showReview}
           {tool}
+          {reviewBut}
           {deleteModal}
           {updateModal}
           {uploadModal}
           {createCourse}
+          {createReview}
         </Container>
       </div>
     );
@@ -549,6 +567,7 @@ const matchStateToProps = (state) => ({
   courseLoading: state.courses.courseLoading,
   reviewLoading: state.reviews.reviewLoading,
   reviews: state.reviews.reviews,
+  review: state.reviews.review,
 });
 
 export default connect(matchStateToProps, {

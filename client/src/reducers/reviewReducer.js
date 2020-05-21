@@ -1,4 +1,9 @@
-import { REVIEW_LOADING, GET_REVIEWS } from '../actions/types';
+import {
+  REVIEW_LOADING,
+  GET_REVIEWS,
+  CREATE_REVIEW_FAIL,
+  CREATE_REVIEW,
+} from '../actions/types';
 
 const initialState = {
   reviewLoading: false,
@@ -18,6 +23,17 @@ export default function (state = initialState, action) {
         ...state,
         reviewLoading: false,
         reviews: action.payload.data.data,
+      };
+    case CREATE_REVIEW:
+      return {
+        ...state,
+        reviewLoading: false,
+        review: action.payload.data.data,
+      };
+    case CREATE_REVIEW_FAIL:
+      return {
+        ...state,
+        reviewLoading: false,
       };
     default:
       return state;

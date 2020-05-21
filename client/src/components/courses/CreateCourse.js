@@ -32,10 +32,6 @@ class CreateCourse extends Component {
     });
   };
 
-  toggle = () => {
-    this.setState({ modal: !this.state.modal });
-  };
-
   onSubmit = (e) => {
     e.preventDefault();
 
