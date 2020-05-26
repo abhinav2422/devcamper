@@ -25,6 +25,19 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   });
 });
 
+exports.getBootcampsOfUser = asyncHandler(async (req, res, next) => {
+  const bootcamps = await Bootcamp.find({ user: req.user._id });
+
+  if (!bootcamps) {
+    return next(new ErrorResponse(`You have not created bootcamps`, 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    data: bootcamps,
+  });
+});
+
 // POST api/v1/bootcamp [Private access]
 exports.createtBootcamp = asyncHandler(async (req, res, next) => {
   req.body.user = req.user.id;

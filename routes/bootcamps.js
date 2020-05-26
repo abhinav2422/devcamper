@@ -2,11 +2,12 @@ const express = require('express');
 const {
   getBootcamps,
   getBootcamp,
+  getBootcampsOfUser,
   createtBootcamp,
   updateBootcamp,
   deleteBootcamp,
   getBootcampsByRadius,
-  uploadBootcampPhoto
+  uploadBootcampPhoto,
 } = require('../controllers/bootcamps');
 
 const advancedResults = require('../middleware/advancedResults');
@@ -16,7 +17,7 @@ const Bootcamp = require('../models/Bootcamp');
 const {
   protect,
   authorize,
-  checkExistenceOwnership
+  checkExistenceOwnership,
 } = require('../middleware/auth');
 
 // Include other resources
@@ -33,6 +34,10 @@ router
   .route('/')
   .get(advancedResults(Bootcamp, 'courses'), getBootcamps)
   .post(protect, authorize('publisher', 'admin'), createtBootcamp);
+
+router
+  .route('/user')
+  .get(protect, authorize('publisher', 'admin'), getBootcampsOfUser);
 
 router
   .route('/:id')

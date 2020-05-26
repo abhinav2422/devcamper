@@ -13,6 +13,7 @@ import {
   UPLOAD_IMAGE_FAIL,
   GET_BOOTCAMPS_BY_DISTANCE,
   CLEAR_MESSAGE,
+  GET_BOOTCAMPS_OF_USER,
 } from './types';
 import { tokenConfig } from './authAction';
 import { getCourses } from './courseAction';
@@ -42,6 +43,19 @@ export const getBootcamp = (id) => async (dispatch) => {
   dispatch({
     type: GET_BOOTCAMP,
     payload: bootcamp,
+  });
+};
+
+export const getBootcampsOfUser = () => async (dispatch, getState) => {
+  dispatch({ type: LOADING });
+
+  const bootcamps = await axios.get(
+    '/api/v1/bootcamps/user',
+    tokenConfig(getState)
+  );
+  dispatch({
+    type: GET_BOOTCAMPS_OF_USER,
+    payload: bootcamps,
   });
 };
 

@@ -11,6 +11,7 @@ import {
   UPLOAD_IMAGE_FAIL,
   GET_BOOTCAMPS_BY_DISTANCE,
   CLEAR_MESSAGE,
+  GET_BOOTCAMPS_OF_USER,
 } from '../actions/types';
 
 const initialState = {
@@ -85,6 +86,12 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         toggleFilters: false,
+        bootcamps: action.payload.data.data,
+      };
+    case GET_BOOTCAMPS_OF_USER:
+      return {
+        ...state,
+        loading: false,
         bootcamps: action.payload.data.data,
       };
     case CLEAR_MESSAGE:
