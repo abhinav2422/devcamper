@@ -1,6 +1,6 @@
-# DevCamper API
+# DevCamper
 
-> Backend API for DevCamper application, which is a bootcamp directory website
+> A MERN stack project application which is a bootcamp directory website.
 
 ## Usage
 
@@ -19,7 +19,13 @@ npm install
 npm run dev
 
 # Run in prod mode
-npm start
+npm run prod
+
+# Run server only
+npm run server
+
+# Run client only
+npm run client
 ```
 
 ## Database Seeder
@@ -34,4 +40,6 @@ node seeder -d
 node seeder -i
 ```
 
-## Documentation with examples [here](https://documenter.getpostman.com/view/10164493/SzS2yUhh?version=latest)
+## Use as an API
+
+> API Documentation with examples [here](https://documenter.getpostman.com/view/10164493/SzS2yUhh?version=latest)
