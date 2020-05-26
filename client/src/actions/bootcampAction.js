@@ -14,6 +14,7 @@ import {
   GET_BOOTCAMPS_BY_DISTANCE,
   CLEAR_MESSAGE,
   GET_BOOTCAMPS_OF_USER,
+  GET_BOOTCAMPS_OF_USER_FAIL,
 } from './types';
 import { tokenConfig } from './authAction';
 import { getCourses } from './courseAction';
@@ -49,14 +50,20 @@ export const getBootcamp = (id) => async (dispatch) => {
 export const getBootcampsOfUser = () => async (dispatch, getState) => {
   dispatch({ type: LOADING });
 
-  const bootcamps = await axios.get(
-    '/api/v1/bootcamps/user',
-    tokenConfig(getState)
-  );
-  dispatch({
-    type: GET_BOOTCAMPS_OF_USER,
-    payload: bootcamps,
-  });
+  try {
+    const bootcamps = await axios.get(
+      '/api/v1/bootcamps/user',
+      tokenConfig(getState)
+    );
+    dispatch({
+      type: GET_BOOTCAMPS_OF_USER,
+      payload: bootcamps,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_BOOTCAMPS_OF_USER_FAIL,
+    });
+  }
 };
 
 export const createBootcamp = ({

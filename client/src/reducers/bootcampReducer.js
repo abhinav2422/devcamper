@@ -12,6 +12,7 @@ import {
   GET_BOOTCAMPS_BY_DISTANCE,
   CLEAR_MESSAGE,
   GET_BOOTCAMPS_OF_USER,
+  GET_BOOTCAMPS_OF_USER_FAIL,
 } from '../actions/types';
 
 const initialState = {
@@ -93,6 +94,11 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         bootcamps: action.payload.data.data,
+      };
+    case GET_BOOTCAMPS_OF_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
       };
     case CLEAR_MESSAGE:
       return {

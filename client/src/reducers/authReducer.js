@@ -7,6 +7,9 @@ import {
   LOGOUT_SUCCESS,
   USER_LOADING,
   USER_LOADED,
+  UPDATE_DETAILS,
+  UPDATE_PASSWORD,
+  UPDATE_PASSWORD_FAIL,
 } from '../actions/types';
 
 const initialState = {
@@ -14,6 +17,7 @@ const initialState = {
   isAuthenticated: null,
   userLoading: false,
   user: null,
+  success: false,
 };
 
 export default function (state = initialState, action) {
@@ -48,6 +52,25 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         userLoading: false,
         user: null,
+      };
+    case UPDATE_DETAILS:
+      return {
+        ...state,
+        userLoading: false,
+        user: action.payload.data.data,
+      };
+    case UPDATE_PASSWORD:
+      localStorage.setItem('token', action.payload.data.token);
+
+      return {
+        ...state,
+        userLoading: false,
+        success: true,
+      };
+    case UPDATE_PASSWORD_FAIL:
+      return {
+        ...state,
+        userLoading: false,
       };
     default:
       return state;

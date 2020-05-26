@@ -9,6 +9,9 @@ import {
   REGISTER_FAIL,
   AUTH_ERROR,
   LOGOUT_SUCCESS,
+  UPDATE_DETAILS,
+  UPDATE_PASSWORD,
+  UPDATE_PASSWORD_FAIL,
 } from './types';
 
 import { getErrors } from './errorAction';
@@ -90,6 +93,67 @@ export const logout = () => async (dispatch) => {
   dispatch({
     type: LOGOUT_SUCCESS,
   });
+};
+
+export const changeName = ({ name }) => async (dispatch, getState) => {
+  dispatch({ type: USER_LOADING });
+
+  const updateName = await axios.put(
+    '/api/v1/auth/updateDetails',
+    JSON.stringify({ name }),
+    tokenConfig(getState)
+  );
+
+  dispatch({
+    type: UPDATE_DETAILS,
+    payload: updateName,
+  });
+};
+
+export const changeEmail = ({ email }) => async (dispatch, getState) => {
+  dispatch({ type: USER_LOADING });
+
+  const updateEmail = await axios.put(
+    '/api/v1/auth/updateDetails',
+    JSON.stringify({ email }),
+    tokenConfig(getState)
+  );
+
+  dispatch({
+    type: UPDATE_DETAILS,
+    payload: updateEmail,
+  });
+};
+
+export const changePassword = ({ currentPassword, newPassword }) => async (
+  dispatch,
+  getState
+) => {
+  dispatch({ type: USER_LOADING });
+
+  const body = JSON.stringify({ currentPassword, newPassword });
+
+  try {
+    const payload = await axios.put(
+      '/api/v1/auth/updatePassword',
+      body,
+      tokenConfig(getState)
+    );
+
+    dispatch({
+      type: UPDATE_PASSWORD,
+      payload,
+    });
+  } catch (error) {
+    dispatch(
+      getErrors(
+        error.response.data,
+        error.response.status,
+        'UPDATE_PASSWORD_FAIL'
+      )
+    );
+    dispatch({ type: UPDATE_PASSWORD_FAIL });
+  }
 };
 
 export const tokenConfig = (getState) => {

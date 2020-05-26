@@ -40,3 +40,8 @@
 .courses {
   border: 1px dashed black;
 }
+
+.fixMargin {
+  margin-left: 0px;
+  margin-right: 0px;
+}
